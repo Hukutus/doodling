@@ -75,15 +75,15 @@ export default class App extends React.Component<any, DrawingState> {
     };
   }
 
-  static createRandomHsl(): string {
+  static createRandomHsl(alpha?: number): string {
     const hue = (Math.random() + 0.618033988749895) * 360;
-    return 'hsl(' + hue + ', 75%, 50%)';
+    return alpha ? 'hsla(' + hue + ', 75%, 50%, ' + alpha + ')' : 'hsl(' + hue + ', 75%, 50%)';
   }
 
   componentDidMount(): void {
     this.setUpCanvas();
 
-    window.addEventListener("resize", this.resizeCanvas.bind(this));
+    window.addEventListener("resize", this.waitForResize.bind(this));
   }
 
   private waitForResize(): void {
@@ -226,12 +226,14 @@ export default class App extends React.Component<any, DrawingState> {
 
             onMouseDown={() => this.toggleDrawing(true)}
             onMouseUp={() => this.toggleDrawing(false)}
-
             onMouseMove={(e) => this.addPoint(e.pageX, e.pageY)}
-
             onMouseLeave={() => this.resetLine(false)}
             onMouseEnter={() => this.resetLine(false)}
-          />
+
+            onTouchStart={() => this.toggleDrawing(true)}
+            onTouchEnd={() => this.toggleDrawing(true)}
+            onTouchMove={(e) => this.addPoint(e.touches[0].pageX, e.touches[0].pageY)}
+          >Canvas not supported</canvas>
         </CanvasContainer>
       </FullPageContainer>
     )
